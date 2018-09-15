@@ -1,63 +1,35 @@
 <?php
-
 require_once('./line/line_class.php');
 require_once('./config.php');
-
 include "./Math/EvalMath.php";
 include "./Math/Stack.php";
-
-
 $client = new LINEBot($channelAccessToken, $channelSecret);
-
 $userId         = $client->parseEvents()[0]['source']['userId'];
 $replyToken     = $client->parseEvents()[0]['replyToken'];
 $timestamp      = $client->parseEvents()[0]['timestamp'];
 $message        = $client->parseEvents()[0]['message'];
 $messageid      = $client->parseEvents()[0]['message']['id'];
 $profil         = $client->profil($userId);
-
 $msg_receive   = $message['text'];
-$type 		= $client->parseEvents()[0]['type'];
-
-if($message['type']=='join'){
-	$balas = array(
-		'replyToken' => $replyToken)
-		'messages' => array(
-			array(
-				'type' => 'text',                   
-				'text' => 'Thx udh invite aku:)'
-			)
-		)
-	);
-	$client->replyMessage($balas)
-}
-
 if($message['type']=='text'){
-
 	$msg_xpl = explode(" ", $msg_receive);
 	$keyword = $msg_xpl[0];
-
-	if($keyword=='help') {
-
+	if($keyword=='/menu') {
 		$balas = array(
 			'replyToken' => $replyToken,                                                        
 			'messages' => array(
 				array(
 					'type' => 'text',                   
 					'text' => 'Perintah :
->help
->hitung'
+					/menu : menampilkan menu
+					/hitung 3+3 : kalkulator'
 				)
 			)
 		);
-
 		$client->replyMessage($balas);
-
-	}elseif($keyword=='hitung'){
-
+	}elseif($keyword=='/hitung'){
 		$m = new EvalMath;
 		$result = $m->evaluate($msg_xpl[1]);
-
 		$balas = array(
 			'replyToken' => $replyToken,                                                        
 			'messages' => array(
@@ -67,20 +39,6 @@ if($message['type']=='text'){
 				)
 			)
 		);
-
-		$client->replyMessage($balas);
-	}elseif($keyword=='tes'){
-
-		$balas = array(
-			'replyToken' => $replyToken,                                                        
-			'messages' => array(
-				array(
-					'type' => 'text',                   
-					'text' => 'tis'
-				)
-			)
-		);
-		
 		$client->replyMessage($balas);
 	}
 }
